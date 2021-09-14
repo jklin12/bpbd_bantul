@@ -67,8 +67,8 @@
                                             <td>{{ $b['name_kel']}}</td>
                                             <td>{{ $b['type']}}</td>
                                             <td>{{ $b['created_at']}}</td>
-                                            <th><a href="#" class="btn btn-success btn-circle">
-                                                    <i class="fa fa-zoom-out"></i>
+                                            <th><a href="bencana/{{ $b['id']}}" class="btn btn-success btn-circle">
+                                                    <i class="fa fa-search-plus"></i>
                                                 </a></th>
                                         </tr>
                                         @endforeach

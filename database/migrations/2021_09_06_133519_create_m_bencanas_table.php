@@ -28,6 +28,7 @@ class CreateMBencanasTable extends Migration
             $table->text('foto');
             $table->string('alamat');
             $table->timestamps();
+            $table->softDeletes('deleted_at', 0);
         });
     }
 
