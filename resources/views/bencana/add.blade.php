@@ -81,7 +81,27 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="size">Ukuran</label>
-                                    <input type="text" class="form-control" id="size" name="size" placeholder="ukuran dalam m">
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            Panjang :
+                                        </div>
+                                        <div class="col-sm">
+                                            <input type="text" class="form-control" id="p" name="panjang" placeholder="panjang">
+                                        </div>
+                                        <div class="col-sm">
+                                            Lebar :
+                                        </div>
+                                        <div class="col-sm">
+                                            <input type="text" class="form-control" id="l" name="lebar" placeholder="lebar">
+                                        </div>
+                                        <div class="col-sm">
+                                            Tinggi :
+                                        </div>
+                                        <div class="col-sm">
+                                            <input type="text" class="form-control" id="t" name="tinggi" placeholder="tinggi">
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="form-group">
                                     <label for="size">Alamat</label>

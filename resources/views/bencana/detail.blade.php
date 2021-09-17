@@ -82,9 +82,9 @@
                                             <td>{{ $bencana['type'] }}</td>
                                         </tr>
                                         <tr>
-                                            <td>Ukuran</td>
+                                            <td>Ukuran PanjangxLebarxTinggi</td>
                                             <td>:</td>
-                                            <td>{{ $bencana['size'] }}</td>
+                                            <td>{{ $bencana['panjang'].'x'.$bencana['lebar'].'x'.$bencana['tinggi'].' M' }}</td>
                                         </tr>
                                         <tr>
                                             <td>Deskripsi</td>

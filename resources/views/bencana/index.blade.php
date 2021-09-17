@@ -54,6 +54,9 @@
                                             <th>Kecamatan</th>
                                             <th>kelurahan</th>
                                             <th>Jenis</th>
+                                            <th>Panjang</th>
+                                            <th>Lebar</th>
+                                            <th>Tinggi</th>
                                             <th>Tanggal Input</th>
                                             <th></th>
                                         </tr>
@@ -66,6 +69,9 @@
                                             <td>{{ $b['nama_kec']}}</td>
                                             <td>{{ $b['name_kel']}}</td>
                                             <td>{{ $b['type']}}</td>
+                                            <td>{{ $b['panjang']}}</td>
+                                            <td>{{ $b['lebar']}}</td>
+                                            <td>{{ $b['tinggi']}}</td>
                                             <td>{{ $b['created_at']}}</td>
                                             <th><a href="bencana/{{ $b['id']}}" class="btn btn-success btn-circle">
                                                     <i class="fa fa-search-plus"></i>

@@ -15,7 +15,7 @@ class MBencana extends Model
     protected $table = 't_bencana';
 
     protected $fillable = [
-        'kecamatan', 'kelurahan', 'deskripsi', 'type', 'size', 'foto', 'alamat'
+        'kecamatan', 'kelurahan', 'deskripsi', 'type', 'panjang','lebar','tinggi', 'foto', 'alamat'
     ];
 
     public function getCreatedAtAttribute()

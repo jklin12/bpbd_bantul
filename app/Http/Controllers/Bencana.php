@@ -14,7 +14,7 @@ class Bencana extends Controller
     public function index()
     {
         /// mengambil data terakhir dan pagination 5 list
-        $bencana = MBencana::select('t_kecamatan.name as nama_kec', 't_kelurahan.name as name_kel', 't_bencana.id', 'deskripsi', 'type', 'created_at')
+        $bencana = MBencana::select('t_kecamatan.name as nama_kec', 't_kelurahan.name as name_kel', 't_bencana.id', 'deskripsi', 'type', 'panjang','lebar','tinggi','created_at')
             ->leftJoin('t_kecamatan', 't_bencana.kecamatan', '=', 't_kecamatan.kecamatan_id')
             ->leftJoin('t_kelurahan', 't_bencana.kelurahan', '=', 't_kelurahan.kelurahan_id')
             ->orderByDesc('created_at')

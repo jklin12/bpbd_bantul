@@ -24,7 +24,9 @@ class CreateMBencanasTable extends Migration
             $table->integer('kelurahan');
             $table->text('deskripsi');
             $table->integer('type');
-            $table->string('size');
+            $table->integer('panjang');
+            $table->integer('lebar');
+            $table->integer('tinggi');
             $table->text('foto');
             $table->string('alamat');
             $table->timestamps();
