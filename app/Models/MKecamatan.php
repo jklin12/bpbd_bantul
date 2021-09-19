@@ -10,6 +10,9 @@ class MKecamatan extends Model
     use HasFactory;
 
     protected $table = 't_kecamatan';
+    protected $primaryKey = 'kecamatan_id';
+
+    public $timestamps = false;
 
     protected $fillable = [
         'name'

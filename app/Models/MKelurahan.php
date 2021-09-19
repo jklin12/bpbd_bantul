@@ -12,6 +12,9 @@ class MKelurahan extends Model
     use HasFactory;
 
     protected $table = 't_kelurahan';
+    protected $primaryKey = 'kelurahan_id';
+
+    public $timestamps = false;
 
     protected $fillable = [
         'kecamatan_id', 'name'
