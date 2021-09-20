@@ -79,7 +79,7 @@
                                         <tr>
                                             <td>Jenis</td>
                                             <td>:</td>
-                                            <td>{{ $bencana['type'] }}</td>
+                                            <td>{{ $bencana['jenis_bencana'] }}</td>
                                         </tr>
                                         <tr>
                                             <td>Ukuran PanjangxLebarxTinggi</td>

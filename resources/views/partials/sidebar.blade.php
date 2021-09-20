@@ -36,6 +36,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" id="nav-kecamatan" href="{{ route('kecamatan.index') }}">Kecamatan</a>
                 <a class="collapse-item" id="nav-kelurahan" href="{{ route('kelurahan.index') }}">Kelurahan</a>
+                <a class="collapse-item" id="nav-jenis" href="{{ route('jenis.index') }}">Jenis Bencana</a>
             </div>
         </div>
     </li>

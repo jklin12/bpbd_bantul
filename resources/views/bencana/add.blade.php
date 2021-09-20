@@ -54,7 +54,7 @@
                                     <label for="exampleFormControlSelect1">Kecamatan </label>
                                     <select class="form-control" id="select-kec" name="kecamatan">
                                         <option value="">Pilih kecamatan</option>
-                                        @foreach ($kecamatan as $k)
+                                        @foreach ($data['kecamatan'] as $k)
                                         <option value="{{ $k['kecamatan_id'] }}">{{ $k['name'] }}</option>
                                         @endforeach
                                     </select>
@@ -73,10 +73,10 @@
                                     <label for="jenis">Jenis</label>
                                     <select class="form-control" id="jenis" name="type">
                                         <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
+                                        @foreach($data['jenis'] as $j)
+                                        
+                                        <option value="{{ $j['jenis_id'] }}">{{ $j['name']}}</option>
+                                        @endforeach 
                                     </select>
                                 </div>
                                 <div class="form-group">

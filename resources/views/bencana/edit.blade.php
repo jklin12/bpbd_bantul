@@ -77,14 +77,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="jenis">Jenis</label>
-                                    <select class="form-control" id="jenis" name="type">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
+                                    <select class="form-control" id="select-jenis" name="type">
+                                        @foreach($data['jenis'] as $j)
+                                        <option value="{{ $j['jenis_id'] }}">{{ $j['name']}}</option>
+                                        @endforeach
                                     </select>
-                                </div> 
+                                </div>
                                 <div class="form-group">
                                     <label for="size">Ukuran</label>
                                     <div class="row">
@@ -170,7 +168,7 @@
     <!-- Page level custom scripts -->
 
     <script type="text/javascript">
-       /* var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+        /* var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
         Dropzone.autoDiscover = false;
         var myDropzone = new Dropzone(".dropzone", {
@@ -193,6 +191,7 @@
             $('#nav-bencana').addClass('active');
             $('#select-kec').val("{{ $data['bencana']['kecamatan'] }}").change();
             $('#select-kel').val("{{ $data['bencana']['kelurahan'] }}").change();
+            $('#select-jenis').val("{{ $data['bencana']['type'] }}").change();
             $('#jenis').val("{{ $data['bencana']['type'] }}").change();
 
             $('#select-kec').on('change', function() {

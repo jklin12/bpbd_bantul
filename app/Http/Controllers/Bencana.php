@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MBencana;
+use App\Models\Mjenis;
 use App\Models\MKecamatan;
 use App\Models\MKelurahan;
 use Carbon\Carbon;
@@ -29,6 +30,7 @@ class Bencana extends Controller
     {
         $method = $request->method();
         $kecamatan = MKecamatan::all();
+        $jenis = Mjenis::all();
 
         if ($request->isMethod('post')) {
 
@@ -49,7 +51,12 @@ class Bencana extends Controller
             }
         }
 
-        return view('bencana.add', compact('kecamatan'));
+        $data = [
+            'kecamatan' => $kecamatan,
+            'jenis'=> $jenis
+        ];
+
+        return view('bencana.add', compact('data'));
     }
 
     public function edit($id, Request $request)
@@ -62,6 +69,7 @@ class Bencana extends Controller
             ->first();
 
         $kecamatan = MKecamatan::all();
+        $jenis = Mjenis::all();
         $kelurahan = MKelurahan::where('kecamatan_id', $bencana['kecamatan_id'])->get();
 
         if ($request->isMethod('post')) {
@@ -77,7 +85,8 @@ class Bencana extends Controller
         $data = [
             'kecamatan'  => $kecamatan,
             'kelurahan' => $kelurahan,
-            'bencana' => $bencana
+            'bencana' => $bencana,
+            'jenis' => $jenis
         ];
 
         return view('bencana.edit', compact('data'));
@@ -95,9 +104,10 @@ class Bencana extends Controller
 
     public function detail($id)
     {
-        $bencana = MBencana::select('t_kecamatan.name as nama_kec', 't_kelurahan.name as name_kel', 't_bencana.*')
+        $bencana = MBencana::select('t_kecamatan.name as nama_kec', 't_kelurahan.name as name_kel', 't_bencana.*','t_jenis.name as jenis_bencana')
             ->leftJoin('t_kecamatan', 't_bencana.kecamatan', '=', 't_kecamatan.kecamatan_id')
             ->leftJoin('t_kelurahan', 't_bencana.kelurahan', '=', 't_kelurahan.kelurahan_id')
+            ->leftJoin('t_jenis', 't_bencana.type', '=', 't_jenis.jenis_id')
             ->where('id', $id)
             ->orderByDesc('created_at')
             ->first();

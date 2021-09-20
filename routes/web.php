@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Authentication;
 use App\Http\Controllers\Home;
-use App\Http\Controllers\Bencana;
-use App\Http\Controllers\DataMaster;
+use App\Http\Controllers\Bencana; 
+use App\Http\Controllers\JenisController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\KelurahanController;
 use App\Http\Controllers\Upload; 
@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('home', [Home::class, 'index'])->name('home');
     Route::get('logout', [Authentication::class, 'logout'])->name('logout');
+    Route::get('home', [Home::class, 'index'])->name('home');
     Route::get('bencana', [Bencana::class, 'index'])->name('bencana');
     Route::get('bencana/{id}', [Bencana::class, 'detail'])->name('bencanaDetail');
     Route::get('addBencana', [Bencana::class, 'add'])->name('addBencana');
@@ -41,8 +42,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('getKelurahan/{id}', [Bencana::class, 'getKelurahan'])->name('getKelurahan');
     Route::get('getKelurahan/{id}', [Bencana::class, 'getKelurahan'])->name('getKelurahan');
     Route::post('file-upload', [Upload::class, 'index'])->name('fileupload');
-
-    Route::resource('DataMaster', DataMaster::class);
+ 
     Route::resource('kelurahan', KelurahanController::class);
     Route::resource('kecamatan', KecamatanController::class);
+    Route::resource('jenis', JenisController::class);
 });
