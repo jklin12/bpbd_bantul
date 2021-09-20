@@ -55,9 +55,10 @@ class Home extends Controller
             "line_date" => $lineDate,
             "line_data" => $lineCount,
             "pie_jenis" => $pieJenis,
-            "pie_data" => $pieCount
+            "pie_data" => $pieCount,
+            "raw_pie" => $pieChart
         ];
-        
+
         return view('vHome', compact('data'));
     }
 }
