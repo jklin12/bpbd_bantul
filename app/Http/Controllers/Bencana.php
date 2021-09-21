@@ -9,20 +9,55 @@ use App\Models\MKecamatan;
 use App\Models\MKelurahan;
 use Carbon\Carbon;
 use Hamcrest\Arrays\IsArray;
+use PhpParser\Node\Stmt\Return_;
 
 class Bencana extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+
         /// mengambil data terakhir dan pagination 5 list
-        $bencana = MBencana::select('t_kecamatan.name as nama_kec', 't_kelurahan.name as name_kel', 't_bencana.id', 'deskripsi', 'type', 'panjang','lebar','tinggi','created_at')
-            ->leftJoin('t_kecamatan', 't_bencana.kecamatan', '=', 't_kecamatan.kecamatan_id')
-            ->leftJoin('t_kelurahan', 't_bencana.kelurahan', '=', 't_kelurahan.kelurahan_id')
-            ->orderByDesc('created_at')
+
+        $kecamatan = MKecamatan::all();
+        $jenis = Mjenis::all();
+        $kelurahan = MKelurahan::all();
+
+
+        $bencana = MBencana::query();
+     
+        $bencana = MBencana::query();
+        if (isset($request['kec']) && $request['kec'] != '') {
+            $bencana = $bencana->where('t_bencana.kecamatan', $request['kec']);
+        }
+
+        if (isset($request['kel']) && $request['kel'] != '') {
+            $bencana = $bencana->where('t_bencana.kelurahan', $request['kel']);
+        }
+
+        if (isset($request['jenis']) && $request['jenis'] != '') {
+            $bencana = $bencana->where('t_bencana.type', $request['jenis']);
+        }
+     
+        $bencana = $bencana->select('t_kecamatan.name as nama_kec', 't_kelurahan.name as name_kel','t_jenis.name as nama_jenis', 't_bencana.id', 'deskripsi', 'type', 'panjang', 'lebar', 'tinggi', 'created_at')
+        ->leftJoin('t_kecamatan', 't_bencana.kecamatan', '=', 't_kecamatan.kecamatan_id')
+        ->leftJoin('t_jenis', 't_bencana.type', '=', 't_jenis.jenis_id')
+        ->leftJoin('t_kelurahan', 't_bencana.kelurahan', '=', 't_kelurahan.kelurahan_id');
+
+        $bencana = $bencana->orderByDesc('created_at')
             ->paginate(10);
 
 
-        return view('bencana.index', compact('bencana'))
+
+        $data = [
+            'kecamatan'  => $kecamatan,
+            'kelurahan' => $kelurahan,
+            'bencana' => $bencana,
+            'jenis' => $jenis,
+            'request' => $request->all()
+        ];
+        
+ 
+        return view('bencana.index', compact('data'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -53,7 +88,7 @@ class Bencana extends Controller
 
         $data = [
             'kecamatan' => $kecamatan,
-            'jenis'=> $jenis
+            'jenis' => $jenis
         ];
 
         return view('bencana.add', compact('data'));
@@ -104,7 +139,7 @@ class Bencana extends Controller
 
     public function detail($id)
     {
-        $bencana = MBencana::select('t_kecamatan.name as nama_kec', 't_kelurahan.name as name_kel', 't_bencana.*','t_jenis.name as jenis_bencana')
+        $bencana = MBencana::select('t_kecamatan.name as nama_kec', 't_kelurahan.name as name_kel', 't_bencana.*', 't_jenis.name as jenis_bencana')
             ->leftJoin('t_kecamatan', 't_bencana.kecamatan', '=', 't_kecamatan.kecamatan_id')
             ->leftJoin('t_kelurahan', 't_bencana.kelurahan', '=', 't_kelurahan.kelurahan_id')
             ->leftJoin('t_jenis', 't_bencana.type', '=', 't_jenis.jenis_id')

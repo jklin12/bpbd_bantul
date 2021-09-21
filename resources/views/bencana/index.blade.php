@@ -45,6 +45,41 @@
                     <div class="card shadow mb-4">
 
                         <div class="card-body">
+                            <form class="mb-2" id="search-form">
+                                <div class="form-row align-items-center">
+                                    <div class="col-auto my-1">
+                                        <label class="mr-sm-2" for="inlineFormCustomSelect">Kecamatan</label>
+                                        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="kec">
+                                            <option></option>
+                                            @foreach ($data['kecamatan'] as $k)
+                                            <option value="{{ $k['kecamatan_id'] }}" {{ isset($data['request']['kec']) &&  $k['kecamatan_id'] == $data['request']['kec'] ? "selected" :""  }}>{{ $k['name'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-auto my-1">
+                                        <label class="mr-sm-2" for="inlineFormCustomSelect">Kelurahan</label>
+                                        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="kel">
+                                            <option></option>
+                                            @foreach ($data['kelurahan'] as $k)
+                                            <option value="{{ $k['kelurahan_id'] }}" {{ isset($data['request']['kel']) &&  $k['kelurahan_id'] == $data['request']['kel'] ? "selected" :""  }}>{{ $k['name'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-auto my-1">
+                                        <label class="mr-sm-2" for="inlineFormCustomSelect">Jenis</label>
+                                        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="jenis">
+                                            <option></option>
+                                            @foreach($data['jenis'] as $j)
+                                            <option value="{{ $j['jenis_id'] }}" {{  isset($data['request']['jenis']) &&  $j['jenis_id'] == $data['request']['jenis'] ? "selected" : ""  }}>{{ $j['name']}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="col-auto my-1 pt-4">
+                                        <button type="submit" id="searchbutton" class="btn btn-primary" form="search-form">Cari</button>
+                                    </div>
+                                </div>
+                            </form>
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
@@ -61,18 +96,18 @@
                                             <th></th>
                                         </tr>
                                     </thead>
-                                    @foreach ($bencana as $key => $b)
+                                    @foreach ($data['bencana'] as $key => $b)
                                     <tbody>
                                         <tr>
                                             <td>{{ $key+1  }}</td>
                                             <td>{{ $b['deskripsi'] }}</td>
                                             <td>{{ $b['nama_kec']}}</td>
                                             <td>{{ $b['name_kel']}}</td>
-                                            <td>{{ $b['type']}}</td>
+                                            <td>{{ $b['nama_jenis']}}</td>
                                             <td>{{ $b['panjang']}}</td>
                                             <td>{{ $b['lebar']}}</td>
                                             <td>{{ $b['tinggi']}}</td>
-                                            <td>{{ $b['created_at']}}</td>
+                                            <td>{{ \Carbon\Carbon::parse($b['created_at'] )->format('d, M Y H:i') }}</td>
                                             <th><a href="bencana/{{ $b['id']}}" class="btn btn-success btn-circle">
                                                     <i class="fa fa-search-plus"></i>
                                                 </a></th>
@@ -81,7 +116,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            {!! $bencana->links() !!}
+                            {!! $data['bencana']->links() !!}
                         </div>
                     </div>
 
@@ -130,6 +165,7 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+
             $('#nav-bencana').addClass('active');
         });
     </script>

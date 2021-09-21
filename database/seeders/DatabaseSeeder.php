@@ -23,13 +23,18 @@ class DatabaseSeeder extends Seeder
 
             // insert data ke table pegawai menggunakan Faker
             DB::table('t_bencana')->insert([
-                'kecamatan' => $faker->numberBetween(1, 10),
-                'kelurahan' => $faker->numberBetween(1, 10),
+                'kecamatan' => $faker->numberBetween(1, 3),
+                'kelurahan' => $faker->numberBetween(1, 9),
                 'deskripsi' => $faker->text,
-                'type' => $faker->numberBetween(1, 5),
-                'size' =>  "10 x 10 m",
-                'foto' => $faker->imageUrl(350, 350),
+                'type' => $faker->numberBetween(1, 7),
+                'panjang' =>   $faker->numberBetween(1, 10),
+                'lebar' =>  $faker->numberBetween(1, 10),
+                "tinggi" =>  $faker->numberBetween(1, 10),
+                'foto' => '',
                 'alamat' =>   $faker->address,
+                'created_at' => date('Y-m-d', strtotime('now +' . $faker->unique()->numberBetween(1, 15) . ' days'))
+
+
             ]);
         }
         // \App\Models\User::factory(10)->create();
