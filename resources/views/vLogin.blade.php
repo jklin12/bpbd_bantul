@@ -33,13 +33,13 @@
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image" style="background: url('{{ asset('src/img/logo.png') }}');">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image" style="background: url('{{ asset('src/img/logo.png') }}');background-repeat: no-repeat;  background-position: center; ">
                            
                             </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Selamat Datang</h1>
                                     </div>
                                     @if(session('errors'))
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -67,7 +67,7 @@
                                     <form class="user" action="{{ route('login') }}" method="post">
                                         @csrf
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user" name="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                                            <input type="email" class="form-control form-control-user" name="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Username">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user" name="password" id="exampleInputPassword" placeholder="Password">

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mjenis;
+use App\Models\MKecamatan;
+use App\Models\MKelurahan;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
@@ -79,16 +81,14 @@ class JenisController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Mjenis $jenis)
+    public function update(Request $request, MKelurahan $jenis)
     {
         $request->validate([
             'name' => 'required',
         ]);
+
         try {
-
             $jenis->update($request->all());
-
-            /// redirect jika sukses menyimpan data
             return redirect()->route('jenis.index')
                 ->with('success', 'Edit jenis berhasil .');
         } catch (QueryException $th) {
