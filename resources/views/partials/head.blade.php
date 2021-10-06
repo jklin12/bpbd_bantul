@@ -14,3 +14,6 @@
 <!-- Custom styles for this template-->
 <link href="{{ asset('src/css/sb-admin-2.min.css') }}" rel="stylesheet">
 <link href="{{ asset('src/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+
+<link href="{{ asset('src/vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker.css') }}" rel="stylesheet" />
+<link href="{{ asset('src/vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css') }}" rel="stylesheet" />
