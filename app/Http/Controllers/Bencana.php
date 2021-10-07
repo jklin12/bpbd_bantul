@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\Export;
 use Illuminate\Http\Request;
 use App\Models\MBencana;
 use App\Models\Mjenis;
 use App\Models\MKecamatan;
 use App\Models\MKelurahan;
-use Carbon\Carbon;
-use Hamcrest\Arrays\IsArray;
-use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\Return_;
-use App\Helpers\AppHelpers;
+use PDF; 
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class Bencana extends Controller
 {
-    public function index(Request $request)
+    public function index($export = null, Request $request)
     {
-
+        $tittle = 'Data bencana';
+        $subTittle = '';
         $limit = 5;
         $by = isset($request['by']) && $request['by'] ? $request['by'] : 'ASC';
         $order = isset($request['order']) && $request['order'] ? $request['order'] : 'created_at';
@@ -25,6 +25,12 @@ class Bencana extends Controller
 
         if (isset($request['limit']) && $request['limit']) {
             $limit = $request['limit'];
+        }
+
+        if ($export) {
+            $limit = 1000;
+            $dates =  isset($request['filter']['date']) && $request['filter']['date'] ? $request['filter']['date']  : date('Y-m-d');
+            $subTittle = "Per Tanggal " . \Carbon\Carbon::parse($dates)->isoFormat('d, MMMM  Y');
         }
 
         $where = [];
@@ -87,6 +93,8 @@ class Bencana extends Controller
         $bencana = $bencana->paginate($limit)->withQueryString();
 
         $data = [
+            'tittle' => $tittle,
+            'sub_tittle' => $subTittle,
             'datas' => $bencana,
             'arr_field' => $arrFiled,
             'request' => $request->all(),
@@ -94,10 +102,18 @@ class Bencana extends Controller
             'order' => $order,
             'by' => $by
         ];
- 
-        return view('bencana.index', compact('data'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+
+        if ($export && $export == 'pdf') {
+            $pdf = PDF::loadView('export.pdf', compact('data'))->setPaper('a4', 'landscape');
+            return $pdf->download($tittle . '_' . $subTittle . '.pdf');
+        } elseif ($export && $export == 'exel') {
+            return Excel::download(new Export($data), 'users.xlsx');
+        } else {
+            return view('bencana.index', compact('data'))
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
     }
+ 
 
     private function arrField()
     {

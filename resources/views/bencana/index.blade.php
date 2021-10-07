@@ -31,7 +31,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Data bencana</h1>
+                        <h1 class="h3 mb-0 text-gray-800">{{ $data['tittle'] }}</h1>
 
                     </div>
 
@@ -52,7 +52,8 @@
                                 <div class="bd-example">
                                     <button type="button" class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="fas fa-filter fa-sm text-white-50 mr-1"></i>Filter</button>
                                     <a href="{{route('bencana')}}" class="btn btn-secondary btn-sm"><i class="fas fa-redo fa-sm text-white-50 mr-1"></i>Reset</a>
-                                    <button type="button" class="btn btn-success btn-sm"><i class="fas fa-print fa-sm text-white-50 mr-1"></i>Export</button>
+                                    <a href="{{route('bencana','pdf')}}" class="btn btn-success btn-sm"><i class="fas fa-file fa-sm text-white-50 mr-1"></i>Export PDF</a>
+                                    <a href="{{route('bencana','exel')}}" class="btn btn-info btn-sm"><i class="fas fa-print fa-sm text-white-50 mr-1"></i>Export Exel</a>
                                 </div>
                             </div>
 
@@ -79,7 +80,7 @@
                                             @if(isset($vf['filter_type']) && $vf['filter_type'] == 'text')
                                             <input type="text" name="filter[{{$kf}}]" id="f_{{$kf}}" class="form-control underline {{ $vf['filter_label_class']}}" />
                                             @elseif(isset($vf['filter_type']) && $vf['filter_type'] == 'select')
-                                            <select class="custom-select mr-sm-2" id="f_{{$kf}}" name="filter[{{$kf}}]"  value="{{ isset($vf['filter_value']) &&  $vf['filter_value']  ? $vf['filter_value'] :"" }}" >
+                                            <select class="custom-select mr-sm-2" id="f_{{$kf}}" name="filter[{{$kf}}]" value="{{ isset($vf['filter_value']) &&  $vf['filter_value']  ? $vf['filter_value'] :"" }}">
                                                 <option></option>
                                                 @foreach ($vf['keyvaldata'] as $kval => $vval)
                                                 <option value="{{ $kval }}" {{ isset($vf['filter_value']) &&  $vf['filter_value'] == $kval ? "selected" :""  }}>{{ $vval }}</option>
@@ -87,7 +88,6 @@
                                             </select>
                                             @elseif(isset($vf['filter_type']) && $vf['filter_type'] == 'date')
                                             <input type="text" class="form-control datepicker-default" id="f_{{$kf}}" placeholder="Select Date" name="filter[{{$kf}}]" value="{{ isset($vf['filter_value']) &&  $vf['filter_value']  ? $vf['filter_value'] :""  }}" />
-
                                             @endif
                                         </div>
                                         @endif
@@ -181,15 +181,14 @@
                                             <th></th>
                                         </tr>
                                     </thead>
-
-                                    @foreach ($data['datas'] as $b)
                                     <tbody>
+                                        @foreach ($data['datas'] as $b)
                                         <tr>
                                             <td>{{ ++$i  }}</td>
                                             @foreach($data['arr_field'] as $key => $val)
                                             @if(isset($val['table']) && $val['table'])
                                             @if($val['form_type'] == 'date')
-                                            <td>{{ \Carbon\Carbon::parse($b[$key])->format('d, M Y h:i') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($b[$key])->isoFormat('d, M Y h:i') }}</td>
                                             @elseif($val['form_type'] == 'select')
                                             <td>{{ $val['keyvaldata'][$b[$key]] }}</td>
                                             @else
@@ -197,10 +196,10 @@
                                             @endif
                                             @endif
                                             @endforeach
-                                            <th><a href="bencana/{{ $b['id']}}" class="btn btn-success btn-circle">
+                                            <td><a href="bencana/{{ $b['id']}}" class="btn btn-success btn-circle">
                                                     <i class="fa fa-search-plus"></i>
                                                 </a>
-                                            </th>
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -251,6 +250,8 @@
     <script src="{{ asset('src/vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('src/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('src/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('src/vendor/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+
 
     <!-- Page level custom scripts -->
 
@@ -273,7 +274,7 @@
             };
         }();
 
-        
+
 
         $(document).ready(function() {
             FormPlugins.init()

@@ -17,3 +17,4 @@
 
 <link href="{{ asset('src/vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker.css') }}" rel="stylesheet" />
 <link href="{{ asset('src/vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css') }}" rel="stylesheet" />
+<link href="{{ asset('src/vendor/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet" />
