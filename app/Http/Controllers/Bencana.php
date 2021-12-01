@@ -8,7 +8,7 @@ use App\Models\MBencana;
 use App\Models\Mjenis;
 use App\Models\MKecamatan;
 use App\Models\MKelurahan;
-use PDF; 
+use PDF;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -82,7 +82,7 @@ class Bencana extends Controller
             $bencana = $bencana->where($value[0], $value[1]);
         }
 
-        $bencana = $bencana->select('kecamatan', 'deskripsi', 'type', 'panjang', 'lebar', 'tinggi', 'created_at', 'type', 'kelurahan');
+        $bencana = $bencana->select('id', 'kecamatan', 'deskripsi', 'type', 'panjang', 'lebar', 'tinggi', 'created_at', 'type', 'kelurahan');
 
         if ($by == 'ASC') {
             $bencana->orderBy($order);
@@ -113,7 +113,7 @@ class Bencana extends Controller
                 ->with('i', (request()->input('page', 1) - 1) * 5);
         }
     }
- 
+
 
     private function arrField()
     {

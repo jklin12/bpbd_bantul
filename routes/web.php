@@ -32,8 +32,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('home', [Home::class, 'index'])->name('home');
     Route::get('logout', [Authentication::class, 'logout'])->name('logout');
     Route::get('home', [Home::class, 'index'])->name('home');
-    Route::get('bencana/{export?}', [Bencana::class, 'index'])->name('bencana');
-    Route::get('bencana/{id}', [Bencana::class, 'detail'])->name('bencanaDetail');
+    Route::get('bencanaExport/{export?}', [Bencana::class, 'index'])->name('bencanaExport');
+    Route::get('bencana', [Bencana::class, 'index'])->name('bencana');
+    Route::get('bencana/{id?}', [Bencana::class, 'detail'])->name('bencanaDetail');
     Route::get('addBencana', [Bencana::class, 'add'])->name('addBencana');
     Route::post('addBencana', [Bencana::class, 'add'])->name('doAddBencana');
     Route::get('editBencana/{id}', [Bencana::class, 'edit'])->name('editBencana');

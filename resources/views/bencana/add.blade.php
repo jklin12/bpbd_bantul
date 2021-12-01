@@ -74,9 +74,9 @@
                                     <select class="form-control" id="jenis" name="type">
                                         <option>1</option>
                                         @foreach($data['jenis'] as $j)
-                                        
+
                                         <option value="{{ $j['jenis_id'] }}">{{ $j['name']}}</option>
-                                        @endforeach 
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -133,7 +133,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; BPBD 2021  </span>
+                        <span>Copyright &copy; BPBD 2021 </span>
                     </div>
                 </div>
             </footer>

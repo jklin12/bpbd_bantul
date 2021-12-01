@@ -52,7 +52,7 @@
                                 <div class="bd-example">
                                     <button type="button" class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="fas fa-filter fa-sm text-white-50 mr-1"></i>Filter</button>
                                     <a href="{{route('bencana')}}" class="btn btn-secondary btn-sm"><i class="fas fa-redo fa-sm text-white-50 mr-1"></i>Reset</a>
-                                    <a href="{{route('bencana','pdf')}}" class="btn btn-success btn-sm"><i class="fas fa-file fa-sm text-white-50 mr-1"></i>Export PDF</a>
+                                    <a href="{{route('bencanaExport','pdf')}}" class="btn btn-success btn-sm"><i class="fas fa-file fa-sm text-white-50 mr-1"></i>Export PDF</a>
                                     <a href="{{route('bencana','exel')}}" class="btn btn-info btn-sm"><i class="fas fa-print fa-sm text-white-50 mr-1"></i>Export Exel</a>
                                 </div>
                             </div>
@@ -196,7 +196,7 @@
                                             @endif
                                             @endif
                                             @endforeach
-                                            <td><a href="bencana/{{ $b['id']}}" class="btn btn-success btn-circle">
+                                            <td><a href="{{route('bencanaDetail',$b['id'])}}" class="btn btn-success btn-circle">
                                                     <i class="fa fa-search-plus"></i>
                                                 </a>
                                             </td>
