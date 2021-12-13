@@ -35,8 +35,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('bencanaExport/{export?}', [Bencana::class, 'index'])->name('bencanaExport');
     Route::get('bencana', [Bencana::class, 'index'])->name('bencana');
     Route::get('bencana/{id?}', [Bencana::class, 'detail'])->name('bencanaDetail');
+
     Route::get('addBencana', [Bencana::class, 'add'])->name('addBencana');
     Route::post('addBencana', [Bencana::class, 'add'])->name('doAddBencana');
+
+    Route::get('addPebaikan/{id?}', [Bencana::class, 'addPebaikan'])->name('addPebaikan');
+    Route::post('addPebaikan/{id?}', [Bencana::class, 'addPebaikan'])->name('doAddPebaikan');
+
     Route::get('editBencana/{id}', [Bencana::class, 'edit'])->name('editBencana');
     Route::post('editBencana/{id}', [Bencana::class, 'edit'])->name('doEditBencana');
     Route::get('deleteBencana/{id}', [Bencana::class, 'delete'])->name('deleteBencana');

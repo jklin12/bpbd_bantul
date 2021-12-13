@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>SB Admin 2 - Login</title>
 
@@ -20,7 +21,23 @@
 
 </head>
 
+<script type="text/javascript">
+        function callbackThen(response){
+            // read HTTP status
+            console.log(response.status);
+            
+            // read Promise object
+            response.json().then(function(data){
+                console.log(data);
+            });
+        }
+        function callbackCatch(error){
+            console.error('Error:', error)
+        }   
+    </script>  
+
 <body class="bg-gradient-primary">
+
 
     <div class="container">
 
@@ -34,7 +51,7 @@
                         <!-- Nested Row within Card Body -->
                         <div class="row">
                             <div class="col-lg-6 d-none d-lg-block bg-login-image" style="background: url('{{ asset('src/img/logo.png') }}');background-repeat: no-repeat;  background-position: center; ">
-                           
+
                             </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
@@ -72,6 +89,12 @@
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user" name="password" id="exampleInputPassword" placeholder="Password">
                                         </div>
+                                         
+                                            {!! htmlScriptTagJsApi([
+                                            'action' => 'homepage',
+                                            'callback_then' => 'callbackThen',
+                                            'callback_catch' => 'callbackCatch'
+                                            ]) !!} 
 
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Login
@@ -101,6 +124,7 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('src/js/sb-admin-2.min.js') }}"></script>
+
 
 </body>
 

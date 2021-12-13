@@ -188,7 +188,7 @@
                                             @foreach($data['arr_field'] as $key => $val)
                                             @if(isset($val['table']) && $val['table'])
                                             @if($val['form_type'] == 'date')
-                                            <td>{{ \Carbon\Carbon::parse($b[$key])->isoFormat('d, M Y h:i') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($b[$key])->isoFormat('dddd, D MMMM Yvd') }}</td>
                                             @elseif($val['form_type'] == 'select')
                                             <td>{{ $val['keyvaldata'][$b[$key]] }}</td>
                                             @else

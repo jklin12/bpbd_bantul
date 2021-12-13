@@ -4,7 +4,18 @@
 <head>
 
     @include('partials.head')
+    <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
 
+        #map {
+            width: 100%;
+            height: 600px;
+        }
+    </style>
 </head>
 
 <body id="page-top">
@@ -37,11 +48,24 @@
                     <!-- Content Row -->
 
                     <div class="row">
+                        <div class="col-xl-12 col-lg-7">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header  Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Peta Data Bencana</h6>
+
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div id='map'></div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Area Chart -->
                         <div class="col-xl-8 col-lg-7">
                             <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
+                                <!-- Card Header Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Data Bencana Berdasarkan Tanggal</h6>
 
@@ -58,7 +82,7 @@
                         <!-- Pie Chart -->
                         <div class="col-xl-4 col-lg-5">
                             <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
+                                <!-- Card Header Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Data Bencana Berdasarkan Jenis</h6>
 
@@ -109,7 +133,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; BPBD 2021  </span>
+                        <span>Copyright &copy; BPBD 2021 </span>
                     </div>
                 </div>
             </footer>
@@ -134,10 +158,27 @@
 
     <!-- Page level plugins -->
     <script src="{{ asset('src/vendor/chart.js/Chart.min.js') }}"></script>
+    <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
 
     <!-- Page level custom scripts -->
 
     <script type="text/javascript">
+        L.mapbox.accessToken = 'pk.eyJ1IjoiZmFyaXNhaXp5IiwiYSI6ImNrd29tdWF3aDA0ZDAycXVzMWp0b2w4cWQifQ.tja8kdSB4_zpO5rOgGyYrQ';
+        var map = L.mapbox.map('map')
+            .setView([-7.9023242, 110.257544], 12.3)
+            .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11')); 
+
+       <?php foreach ($data['map_data'] as $key => $value): ?>
+        var marker = L.marker([<?php echo $value['latitude']?>, <?php echo $value['longitude']?>], {
+                icon: L.mapbox.marker.icon({
+                    'marker-color': '#9c89cc'
+                })
+            })
+            .bindPopup('<?php echo $value['element']?>')
+            .addTo(map);
+
+       <?php endforeach?> 
+      
         $(document).ready(function() {
             $('#nav-dashboard').addClass('active');
         });
@@ -185,7 +226,7 @@
                     yAxes: [{
                         ticks: {
                             beginAtZero: true,
-                            steps: 20, 
+                            steps: 20,
                         }
                     }]
 
@@ -262,7 +303,7 @@
                     yAxes: [{
                         ticks: {
                             beginAtZero: true,
-                            steps: 2, 
+                            steps: 2,
                         }
                     }]
                 },

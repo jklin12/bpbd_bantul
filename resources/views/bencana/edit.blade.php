@@ -31,7 +31,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Tambah Data bencana</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Edit Data bencana</h1>
                     </div>
 
                     @if ($errors->any())
@@ -85,23 +85,23 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="size">Ukuran</label>
-                                    <div class="row">
-                                        <div class="col-sm">
+                                    <div class="row row justify-content-md-start">
+                                        <div class="col-md-auto align-self-center">
                                             Panjang :
                                         </div>
-                                        <div class="col-sm">
+                                        <div class="col-md-auto align-self-center">
                                             <input type="text" class="form-control" id="p" name="panjang" placeholder="panjang" value="{{ $data['bencana']['panjang'] }}">
                                         </div>
-                                        <div class="col-sm">
+                                        <div class="col-md-auto align-self-center">
                                             Lebar :
                                         </div>
-                                        <div class="col-sm">
+                                        <div class="col-md-auto align-self-center">
                                             <input type="text" class="form-control" id="l" name="lebar" placeholder="lebar" value="{{ $data['bencana']['lebar'] }}">
                                         </div>
-                                        <div class="col-sm">
+                                        <div class="col-md-auto align-self-center">
                                             Tinggi :
                                         </div>
-                                        <div class="col-sm">
+                                        <div class="col-md-auto align-self-center">
                                             <input type="text" class="form-control" id="t" name="tinggi" placeholder="tinggi" value="{{ $data['bencana']['tinggi'] }}">
                                         </div>
                                     </div>
@@ -111,10 +111,27 @@
                                     <label for="size">Alamat</label>
                                     <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Alamat " value="{{ $data['bencana']['alamat'] }}">
                                 </div>
-                                <!--<div id="images">
+                                <div class="form-group">
+                                    <label for="size">Latitude</label>
+                                    <input type="text" class="form-control" id="alamat" name="latitude" placeholder="latitude" value="{{  $data['bencana']['latitude']}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="size">Longitude</label>
+                                    <input type="text" class="form-control" id="alamat" name="longitude" placeholder="longitude" value="{{  $data['bencana']['longitude']}}">
+                                </div>
+                                <div id="images">
 
-                                </div>-->
+                                </div>
                             </form>
+                            <div class="form-group">
+                                <label for="size">Foto</label>
+                                <form action="/file-upload" class="dropzone mb-2">
+                                    <div class="fallback">
+                                        <input name="file" type="file" multiple />
+                                    </div>
+                                </form>
+                            </div>
+
                             <!--<div class="form-group">
                                 <label for="size">Foto</label>
                                 <form action="/file-upload" class="dropzone mb-2">
@@ -137,7 +154,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; BPBD 2021  </span>
+                        <span>Copyright &copy; BPBD 2021 </span>
                     </div>
                 </div>
             </footer>
@@ -168,7 +185,7 @@
     <!-- Page level custom scripts -->
 
     <script type="text/javascript">
-        /* var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+        var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
         Dropzone.autoDiscover = false;
         var myDropzone = new Dropzone(".dropzone", {
@@ -185,7 +202,9 @@
         });
         myDropzone.on("sending", function(file, xhr, formData) {
             formData.append("_token", CSRF_TOKEN);
-        });*/
+        });
+
+
 
         $(document).ready(function() {
             $('#nav-bencana').addClass('active');

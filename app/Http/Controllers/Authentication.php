@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\RateLimiter;
 use Validator;
+use Exception;
 use Hash;
 use Session;
 use App\Models\User;
 
 class Authentication extends Controller
 {
+    protected $maxAttempts = 1; // Default is 5
+    protected $decayMinutes = 1; // Default is 1
+
     public function showFormLogin()
     {
         if (Auth::check()) { // true sekalian session field di users nanti bisa dipanggil via Auth
@@ -22,6 +28,13 @@ class Authentication extends Controller
 
     public function login(Request $request)
     {
+        if (RateLimiter::tooManyAttempts($this->throttleKey(), 3)) {
+            Session::flash('error', 'Percobaan Login tidak di izinkan');
+            return redirect()->route('login');
+        }
+
+
+
         $rules = [
             'email'     => 'required|email',
             'password'  => 'required|string'
@@ -44,7 +57,17 @@ class Authentication extends Controller
             'email'     => $request->input('email'),
             'password'  => $request->input('password'),
         ];
- 
+
+        if (!Auth::attempt($data)) {
+            RateLimiter::hit($this->throttleKey(), $seconds = 3600);
+
+            Session::flash('error', 'Email atau password salah');
+            return redirect()->route('login');
+        } else {
+            RateLimiter::clear($this->throttleKey());
+            return redirect()->route('home');
+        }
+
 
         Auth::attempt($data);
 
@@ -108,5 +131,10 @@ class Authentication extends Controller
     {
         Auth::logout(); // menghapus session yang aktif
         return redirect()->route('login');
+    }
+
+    public function throttleKey()
+    {
+        return Str::lower(request('email')) . '|' . request()->ip();
     }
 }

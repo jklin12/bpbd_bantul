@@ -8,7 +8,10 @@ use App\Models\MBencana;
 use App\Models\Mjenis;
 use App\Models\MKecamatan;
 use App\Models\MKelurahan;
+use App\Models\Mperbaikan;
+use Illuminate\Support\Facades\DB;
 use PDF;
+use Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -286,17 +289,62 @@ class Bencana extends Controller
         $jenis = Mjenis::all();
 
         if ($request->isMethod('post')) {
+            $rules = [
+                'kecamatan'     => 'required',
+                'kelurahan'  => 'required',
+                'deskripsi'  => 'required',
+                'type'  => 'required',
+                'panjang'  => 'required|integer',
+                'lebar'  => 'required|integer',
+                'tinggi'  => 'required|integer',
+                'alamat'  => 'required',
+                'latitude'  => 'required',
+                'longitude'  => 'required',
+            ];
 
-            $img = '';
+            $messages = [
+                'kecamatan.required'    => 'Kecamatan wajib diisi',
+                'kelurahan.required'    => 'Kelurahan wajib diisi',
+                'deskripsi.required'    => 'Deskripsi wajib diisi',
+                'alamat.required'    => 'Alamat wajib diisi',
+                'panjang.required'    => 'Panjang wajib diisi',
+                'panjang.integer'    => 'Panjang harus angka',
+                'lebar.required'    => 'Lebar wajib diisi',
+                'lebar.integer'    => 'Lebar harus angka',
+                'tinggi.required'    => 'Tinggi wajib diisi',
+                'tinggi.integer'    => 'Tinggi harus angka',
+                'latitude.required'    => 'Latitude Harus di isi',
+                'longitude.required'    => 'Longitude Harus di isi',
+
+
+
+            ];
+
+            $validator = Validator::make($request->all(), $rules, $messages);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput($request->all);
+            }
+            $arrImage = [];
             if (is_array($request['images'])) {
-                foreach ($request['images'] as $key => $value) {
-                    $img .= $value . ',';
-                }
+                $arrImage = $request['images'];
+                $type = $request['type'];
+                unset($request['images']);
+                unset($request['type']);
             }
 
-            $request['foto'] = $img;
-
             $insert = MBencana::create($request->all());
+            $img = [];
+            $insertID = DB::getPdo()->lastInsertId();
+
+
+            if ($arrImage) {
+
+                foreach ($arrImage as $key => $value) {
+                    $img[] =   ['bencana_id' => $insertID, 'foto_name' => $value,'type' => $type];
+                }
+                DB::table('t_data_foto')->insert($img);
+            }
 
             if ($insert) {
                 return redirect()->route('bencana')
@@ -326,14 +374,35 @@ class Bencana extends Controller
         $kelurahan = MKelurahan::where('kecamatan_id', $bencana['kecamatan_id'])->get();
 
         if ($request->isMethod('post')) {
-
+            $arrImage = [];
+            if (is_array($request['images'])) {
+                $arrImage = $request['images'];
+                unset($request['images']);
+            }
             $update = MBencana::find($id)
                 ->update($request->all());
+            $img = [];
+
+            if ($arrImage) {
+
+                foreach ($arrImage as $key => $value) {
+                    $img[] =   ['bencana_id' => $id, 'foto_name' => $value];
+                }
+                DB::table('t_data_foto')->insert($img);
+            }
+
+
             if ($update) {
                 return redirect()->route('bencanaDetail', $id)
                     ->with('success', 'Edit Data Berhasil');
             }
         }
+
+
+        $foto = DB::table('t_data_foto')
+            ->where('bencana_id', '=', $id)
+            ->get();
+        $data['foto'] = $foto;
 
         $data = [
             'kecamatan'  => $kecamatan,
@@ -364,9 +433,24 @@ class Bencana extends Controller
             ->where('id', $id)
             ->orderByDesc('created_at')
             ->first();
-        $foto = explode(',', $bencana['foto']);
+        $foto = DB::table('t_data_foto')
+            ->where('bencana_id', '=', $id)
+            ->where('type', '=', 'bencana')
+            ->get();
         $bencana['foto'] = $foto;
 
+        $bencana['arr_status'] = ['Baru', 'Proses', 'Selesai'];
+        $perbaikan = Mperbaikan::where('t_perbaikan.bencana_id', $id) 
+            ->leftJoin('t_data_foto', 't_perbaikan.id', '=', 't_data_foto.bencana_id')
+            ->get(); 
+        $susunPerbaikan = [];
+        foreach ($perbaikan as $key => $value) {
+           $susunPerbaikan[$value['id']]['id'] = $value['id'];
+           $susunPerbaikan[$value['id']]['status'] = $value['status'];
+           $susunPerbaikan[$value['id']]['deskripsi'] = $value['deskripsi'];
+           $susunPerbaikan[$value['id']]['foto'][] = $value['foto_name'];
+        }
+        $bencana['perbaikan'] = $susunPerbaikan;
         return view('bencana.detail', compact('bencana'));
     }
 
@@ -376,5 +460,54 @@ class Bencana extends Controller
 
 
         echo json_encode($kelurahan);
+    }
+
+    public function addPebaikan($id = null, Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $rules = [
+                'status'  => 'required',
+                'deskripsi'  => 'required',
+            ];
+
+            $messages = [
+                'status.required'    => 'status wajib diisi',
+                'deskripsi.required'    => 'Deskripsi wajib diisi',
+            ];
+
+            $validator = Validator::make($request->all(), $rules, $messages);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput($request->all);
+            }
+            $arrImage = [];
+            if (is_array($request['images'])) {
+                $arrImage = $request['images'];
+                $type = $request['type'];
+                unset($request['images']);
+                unset($request['type']);
+            }
+            $insert = Mperbaikan::create($request->all());
+            $img = [];
+            $insertID = DB::getPdo()->lastInsertId();
+
+
+            if ($arrImage) {
+
+                foreach ($arrImage as $key => $value) {
+                    $img[] =   ['bencana_id' => $insertID, 'foto_name' => $value, 'type' => $type];
+                }
+                DB::table('t_data_foto')->insert($img);
+            }
+            if ($insert) {
+                return redirect()->route('bencana')
+                    ->with('success', 'Tambah Data Berhasil');
+            }
+        }
+        $data = [
+            'id' => $id
+        ];
+
+        return view('bencana.addPerbaiakn', compact('data'));
     }
 }

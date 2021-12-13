@@ -48,74 +48,22 @@
                     <div class="card shadow mb-4">
 
                         <div class="card-body">
-                            <form role="form" id="form-bencana" action="{{ route('doAddBencana') }}" method="POST">
+                            <form role="form" id="form-bencana" action="{{ route('doAddPebaikan') }}" method="POST">
                                 @csrf
-                                <input type="hidden" name="type" value="bencana">
+                                <input type="hidden" name="bencana_id" value="{{$data['id']}}">
+                                <input type="hidden" name="type" value="perbaikan">
                                 <div class="form-group">
-                                    <label for="exampleFormControlSelect1">Kecamatan </label>
-                                    <select class="form-control" id="select-kec" name="kecamatan">
-                                        <option value="">Pilih kecamatan</option>
-                                        @foreach ($data['kecamatan'] as $k)
-                                        <option value="{{ $k['kecamatan_id'] }}">{{ $k['name'] }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleFormControlSelect1">Kelurahan </label>
-                                    <select class="form-control" id="select-kel" name="kelurahan">
-                                        <option value="">Pilih Kelurahan</option>
+                                    <label for="exampleFormControlSelect1">Status </label>
+                                    <select class="form-control" id="select-status" name="status">
+                                        <option value="">--Pilih Status--</option>
+                                        <option value="0">Baru</option>
+                                        <option value="1">Proses</option>
+                                        <option value="2">Selesai</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="desc">Deskripsi</label>
                                     <textarea class="form-control" id="desc" rows="3" name="deskripsi"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="jenis">Jenis</label>
-                                    <select class="form-control" id="jenis" name="type">
-                                        <option>1</option>
-                                        @foreach($data['jenis'] as $j)
-
-                                        <option value="{{ $j['jenis_id'] }}">{{ $j['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="size">Ukuran :</label>
-                                    <div class="row justify-content-md-start">
-                                        <div class="col-md-auto align-self-center">
-                                            Panjang (m) :
-                                        </div>
-                                        <div class="col-md-auto align-self-center">
-                                            <input type="text" class="form-control" id="p" name="panjang" placeholder="panjang">
-                                        </div>
-                                        <div class="col-md-auto align-self-center">
-                                            Lebar (m) :
-                                        </div>
-                                        <div class="col-md-auto align-self-center">
-                                            <input type="text" class="form-control" id="l" name="lebar" placeholder="lebar">
-                                        </div>
-                                        <div class="col-md-auto align-self-center">
-                                            Tinggi (m) :
-                                        </div>
-                                        <div class="col-md-auto align-self-center">
-                                            <input type="text" class="form-control" id="t" name="tinggi" placeholder="tinggi">
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                                <div class="form-group">
-                                    <label for="size">Alamat</label>
-                                    <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Alamat ">
-                                </div>
-                                <div class="form-group">
-                                    <label for="size">Latitude</label>
-                                    <input type="text" class="form-control" id="alamat" name="latitude" placeholder="latitude ">
-                                </div>
-                                <div class="form-group">
-                                    <label for="size">Longitude</label>
-                                    <input type="text" class="form-control" id="alamat" name="longitude" placeholder="longitude ">
                                 </div>
                                 <div id="images">
 
@@ -126,6 +74,7 @@
                                 <form action="/file-upload" class="dropzone mb-2">
                                     <div class="fallback">
                                         <input name="file" type="file" multiple />
+                                        
                                     </div>
                                 </form>
                             </div>

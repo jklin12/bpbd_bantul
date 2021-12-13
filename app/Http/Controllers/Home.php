@@ -12,6 +12,7 @@ class Home extends Controller
 {
     public function index()
     {
+
         $bencana = MBencana::select(DB::raw('created_at,count(*) as jumlah'))
             ->where('deleted_at', null)
             ->groupBy('created_at')
@@ -90,12 +91,58 @@ class Home extends Controller
             "raw_pie" => $pieChart,
             "bar_kecamatan" => $barKecamatan,
             "bar_count" => $barCount,
-            "bar_color" => $barColor
-        ];
-
+            "bar_color" => $barColor,
+            "map_data" => $this->getMapData()
+        ]; 
         return view('vHome', compact('data'));
     }
 
+    private function getMapData()
+    {
+        $bencana = MBencana::select(DB::raw('t_bencana.*,t_kecamatan.name as nama_kecamatan,t_kelurahan.name as nama_kelurahan,t_jenis.name as nama_jenis'))
+            ->leftJoin('t_kecamatan', 't_kecamatan.kecamatan_id', '=', 't_bencana.kecamatan')
+            ->leftJoin('t_kelurahan', 't_kelurahan.kelurahan_id', '=', 't_bencana.kelurahan')
+            ->leftJoin('t_jenis', 't_bencana.type', '=', 't_jenis.jenis_id')
+            ->where('deleted_at', null)
+            ->get();
+        $elements = '';
+        $arrMap = [];
+        foreach ($bencana as $key => $value) {
+            $elements .= '<table class="table table-borderless">';
+            $elements .= '<tbody>';
+            $elements .= '<tr>';
+            $elements .= ' <td>Kecamatan</td>';
+            $elements .= ' <td><strong>' . $value['nama_kecamatan'] . '</strong></td>';
+            $elements .= '</tr>';
+            $elements .= '<tr>';
+            $elements .= ' <td>Kelurahan</td>';
+            $elements .= ' <td><strong>' . $value['nama_kelurahan'] . '</strong></td>';
+            $elements .= '</tr>';
+            $elements .= '<tr>';
+            $elements .= ' <td>Alamat</td>';
+            $elements .= ' <td><strong>' . $value['alamat'] . '</td>';
+            $elements .= '</tr>';
+            $elements .= '<tr>';
+            $elements .= ' <td>Jenis Kerusakan</td>';
+            $elements .= ' <td><strong>' . $value['nama_jenis'] . '</strong></td>';
+            $elements .= '</tr>';
+            $elements .= '<tr>';
+            $elements .= ' <td>Ukuran</td>';
+            $elements .= ' <td><strong>' . $value['panjang'] . ' x ' . $value['lebar'] . ' x ' . $value['tinggi'] . '</strong></td>';
+            $elements .= '</tr>';
+            $elements .= '<tr>';
+            $elements .= ' <td>Deskripsi</td>';
+            $elements .= ' <td><strong>' . $value['deskripsi'] . '</strong></td>';
+            $elements .= '</tr>';
+            $elements .= '<tr>';
+            $elements .= '</tbody></table>';
+            $arrMap[$key]['element'] = $elements;
+            $arrMap[$key]['latitude'] = $value['latitude'];
+            $arrMap[$key]['longitude'] = $value['longitude'];
+            $elements = ''; 
+        }
+        return $arrMap;
+    }
     private function rand_color()
     {
         return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
