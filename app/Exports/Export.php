@@ -2,24 +2,47 @@
 
 namespace App\Exports;
 
-use App\Models\MBencana;
-use Illuminate\Support\Arr;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class Export implements FromCollection,WithHeadings
+class Export implements ShouldAutoSize, FromCollection, WithHeadings, WithStyles, WithHeadingRow
 {
 
-    private $data ;
+    private $data;
 
-    public function __construct(array $data) 
+    public function __construct(array $data)
     {
         $this->data = $data;
     }
+
+    public function styles(Worksheet $sheet)
+    {
+        $sheet->getStyle('A1:Z1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:Z1')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A1:Z1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+       
+    }
     public function collection()
     {
- 
-        return MBencana::all();
+        $data = $this->data;
+        $i = 1;
+        $datas = [];
+        foreach ($data['datas'] as $keys => $values) {
+            foreach ($data['arr_field'] as $key => $value) {
+                if ($value['table']) {
+                    $datas[$keys]['no'] = $i;
+                    $datas[$keys][$key] = $values[$key];
+                }
+            }
+            $i++;
+        }
+
+        return collect($datas);
     }
 
     public function headings(): array
@@ -27,18 +50,12 @@ class Export implements FromCollection,WithHeadings
 
         $data = $this->data;
 
-        $heading = [];
+        $heading[] = 'No.';
         foreach ($data['arr_field'] as $key => $value) {
-            $heading[$key] = $key;
+            if ($value['table']) {
+                $heading[] = $value['label'];
+            }
         }
-
-        print_r($heading);
-        die();
-
-        return [
-            '#',
-            'User',
-            'Date',
-        ];
+        return $heading;
     }
 }

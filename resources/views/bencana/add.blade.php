@@ -71,9 +71,18 @@
                                     <textarea class="form-control" id="desc" rows="3" name="deskripsi"></textarea>
                                 </div>
                                 <div class="form-group">
+                                    <label for="kategori">Kategori</label>
+                                    <select class="form-control" id="kategori" name="kategori">
+                                        <option>--Pilih Jenis--</option>
+                                        <option value="Mitigasi">Mitigasi</option>
+                                        <option value="Rehabilitasi">Rehabilitasi</option>
+                                        
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label for="jenis">Jenis</label>
                                     <select class="form-control" id="jenis" name="type">
-                                        <option>1</option>
+                                        <option>--Pilih Jenis--</option>
                                         @foreach($data['jenis'] as $j)
 
                                         <option value="{{ $j['jenis_id'] }}">{{ $j['name']}}</option>

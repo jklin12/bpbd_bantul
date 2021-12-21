@@ -38,10 +38,10 @@
                     @endif
                     <ul class="nav nav-pills mb-2" id="tabs-title-region-nav-tabs" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" role="tab" href="#block-simple-text-1" aria-selected="false" aria-controls="block-simple-text-1" id="block-simple-text-1-tab">Data Bencana</a>
+                            <a class="nav-link" href="{{ route('bencanaDetail',$bencana['id'].'?tab=detail' )}}" aria-selected="false" aria-controls="block-detail" id="tab-detail">Data Bencana</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" role="tab" href="#block-simple-text-2" aria-selected="false" aria-controls="block-simple-text-2" id="block-simple-text-2-tab">Data Perbaikan</a>
+                            <a class="nav-link" href="{{ route('bencanaDetail',$bencana['id'].'?tab=perbaikan' )}}" aria-selected="false" aria-controls="block-perbaikan" id="tab-perbaikan">Riwayat Perbaikan</a>
                         </li>
 
 
@@ -52,7 +52,7 @@
                         <div class="card-body">
                             <div class="tab-content">
 
-                                <div id="block-simple-text-1" class="tab-pane active block block-layout-builder block-inline-blockqfcc-blocktype-simple-text" role="tabpanel" aria-labelledby="block-simple-text-1-tab">
+                                <div id="block-detail" class="tab-pane block block-layout-builder block-inline-blockqfcc-blocktype-simple-text" role="tabpanel" aria-labelledby="tab-detail">
                                     <div class="table-responsive" style="overflow-x: hidden;">
                                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
                                             <h1 class="h3 mb-0 text-gray-800">Detail Bencana </h1>
@@ -72,42 +72,52 @@
                                         <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
                                             <tbody>
                                                 <tr class="d-flex">
-                                                    <td class="col-2">Kecamatan</td>
+                                                    <td class="col-lg-4">Kecamatan</td>
                                                     <td>:</td>
                                                     <td>{{ $bencana['nama_kec'] }}</td>
                                                 </tr>
                                                 <tr class="d-flex">
-                                                    <td class="col-2">Kelurahan</td>
+                                                    <td class="col-4">Kelurahan</td>
                                                     <td>:</td>
                                                     <td>{{ $bencana['name_kel'] }}</td>
                                                 </tr>
                                                 <tr class="d-flex">
-                                                    <td class="col-2">Alamat</td>
+                                                    <td class="col-4">Alamat</td>
                                                     <td>:</td>
                                                     <td>{{ $bencana['alamat'] }}</td>
                                                 </tr>
                                                 <tr class="d-flex">
-                                                    <td class="col-2">Latitude</td>
+                                                    <td class="col-4">Latitude</td>
                                                     <td>:</td>
                                                     <td>{{ $bencana['latitude'] }}</td>
                                                 </tr>
                                                 <tr class="d-flex">
-                                                    <td class="col-2">Longitude</td>
+                                                    <td class="col-4">Longitude</td>
                                                     <td>:</td>
                                                     <td>{{ $bencana['longitude'] }}</td>
                                                 </tr>
                                                 <tr class="d-flex">
-                                                    <td class="col-2">Jenis</td>
+                                                    <td class="col-4">Status</td>
+                                                    <td>:</td>
+                                                    <td>{{ $bencana['status'] }}</td>
+                                                </tr>
+                                                <tr class="d-flex">
+                                                    <td class="col-4">Kategori</td>
+                                                    <td>:</td>
+                                                    <td>{{ $bencana['kategori'] }}</td>
+                                                </tr>
+                                                <tr class="d-flex">
+                                                    <td class="col-4">Jenis</td>
                                                     <td>:</td>
                                                     <td>{{ $bencana['jenis_bencana'] }}</td>
                                                 </tr>
                                                 <tr class="d-flex">
-                                                    <td class="col-2">Ukuran PanjangxLebarxTinggi</td>
+                                                    <td class="col-4">Ukuran Panjang x Lebar x Tinggi</td>
                                                     <td>:</td>
-                                                    <td>{{ $bencana['panjang'].'x'.$bencana['lebar'].'x'.$bencana['tinggi'].' M' }}</td>
+                                                    <td>{{ $bencana['panjang'].' x '.$bencana['lebar'].' x '.$bencana['tinggi'].' M' }}</td>
                                                 </tr>
                                                 <tr class="d-flex">
-                                                    <td class="col-2">Deskripsi</td>
+                                                    <td class="col-4">Deskripsi</td>
                                                     <td>:</td>
                                                     <td>
                                                         <p>{{ $bencana['deskripsi'] }}</p>
@@ -115,7 +125,7 @@
                                                 </tr>
                                                 </tr>
                                                 <tr class="d-flex">
-                                                    <td class="col-2">Foto</td>
+                                                    <td class="col-4">Foto</td>
                                                     <td>:</td>
                                                     <td> </td>
                                                 </tr>
@@ -125,7 +135,7 @@
                                     </div>
                                     <div class="row">
                                         @foreach($bencana['foto'] as $key => $b)
-                                        <div class="col-lg-1 col-md-2 col-2">
+                                        <div class="col-lg-1 col-md-2 col-4">
                                             <a href="#" class="d-block mb-4 img-btn" data-img="{{ '/files/'.$b->foto_name }}">
                                                 <img class="img-fluid img-thumbnail" src="{{ '/files/'.$b->foto_name }}" alt="">
                                             </a>
@@ -133,7 +143,7 @@
                                         @endforeach
                                     </div>
                                 </div>
-                                <div id="block-simple-text-2" class="tab-pane  block block-layout-builder block-inline-blockqfcc-blocktype-simple-text" role="tabpanel" aria-labelledby="block-simple-text-2-tab">
+                                <div id="block-perbaikan" class="tab-pane  block block-layout-builder block-inline-blockqfcc-blocktype-simple-text" role="tabpanel" aria-labelledby="tab-perbaikan">
                                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                                         <h1 class="h3 mb-0 text-gray-800">Detail Perbaikan </h1>
 
@@ -160,6 +170,7 @@
                                         <thead>
                                             <th>No.</th>
                                             <th>Status</th>
+                                            <th>Tanggal Input</th>
                                             <th>Keterangan</th>
                                             <th class="w-50">Foto</th>
                                             <th colspan="2" class="text-center col-lg2 ">Aksi</th>
@@ -169,11 +180,12 @@
                                             <tr>
                                                 <td>{{ $key+1}}</td>
                                                 <td>{{ $bencana['arr_status'][$data['status']] }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($data['created_at'])->isoFormat('dddd, D MMMM Y') }}</td>
                                                 <td>{{ $data['deskripsi'] }}</td>
                                                 <td>
                                                     <div class="row">
                                                         @foreach($data['foto'] as $key => $b)
-                                                        <div class="col-lg-1 col-md-2 col-2">
+                                                        <div class="col-lg-1 col-md-2 col-4">
                                                             <a href="#" class="d-block mb-4 img-btn" data-img="{{ '/files/'.$b }}">
                                                                 <img class="img-fluid img-thumbnail" src="{{ '/files/'.$b }}" alt="">
                                                             </a>
@@ -293,6 +305,9 @@
                 $('#image-container').attr('src', img)
                 $('#modal-image').modal('show')
             });
+
+            $('#tab-<?php echo $bencana['tab']?>').addClass('active');
+            $('#block-<?php echo $bencana['tab']?>').addClass('active');
             var tabsActions = function(element) {
                 this.element = $(element);
 

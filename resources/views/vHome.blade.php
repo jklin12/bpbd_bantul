@@ -166,19 +166,21 @@
         L.mapbox.accessToken = 'pk.eyJ1IjoiZmFyaXNhaXp5IiwiYSI6ImNrd29tdWF3aDA0ZDAycXVzMWp0b2w4cWQifQ.tja8kdSB4_zpO5rOgGyYrQ';
         var map = L.mapbox.map('map')
             .setView([-7.9023242, 110.257544], 12.3)
-            .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11')); 
+            .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));
 
-       <?php foreach ($data['map_data'] as $key => $value): ?>
-        var marker = L.marker([<?php echo $value['latitude']?>, <?php echo $value['longitude']?>], {
-                icon: L.mapbox.marker.icon({
-                    'marker-color': '#9c89cc'
-                })
-            })
-            .bindPopup('<?php echo $value['element']?>')
-            .addTo(map);
+        <?php foreach ($data['map_data'] as $key => $value) :
+            if ($value['latitude'] && $value['longitude']) {  ?>
+                var marker = L.marker([<?php echo $value['latitude'] ?>, <?php echo $value['longitude'] ?>], {
+                        icon: L.mapbox.marker.icon({
+                            'marker-color': '#9c89cc'
+                        })
+                    })
+                    .bindPopup('<?php echo $value['element'] ?>')
+                    .addTo(map);
 
-       <?php endforeach?> 
-      
+        <?php }
+        endforeach ?>
+
         $(document).ready(function() {
             $('#nav-dashboard').addClass('active');
         });

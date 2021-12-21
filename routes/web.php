@@ -15,11 +15,12 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Authentication;
 use App\Http\Controllers\Home;
-use App\Http\Controllers\Bencana; 
+use App\Http\Controllers\Bencana;
 use App\Http\Controllers\JenisController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\KelurahanController;
-use App\Http\Controllers\Upload; 
+use App\Http\Controllers\Relokasi;
+use App\Http\Controllers\Upload;
 
 Route::get('/', [Authentication::class, 'showFormLogin'])->name('login');
 Route::get('login', [Authentication::class, 'showFormLogin'])->name('login');
@@ -32,7 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('home', [Home::class, 'index'])->name('home');
     Route::get('logout', [Authentication::class, 'logout'])->name('logout');
     Route::get('home', [Home::class, 'index'])->name('home');
-    Route::get('bencanaExport/{export?}', [Bencana::class, 'index'])->name('bencanaExport');
+    Route::get('bencanaExport/{request?}', [Bencana::class, 'index'])->name('bencanaExport');
     Route::get('bencana', [Bencana::class, 'index'])->name('bencana');
     Route::get('bencana/{id?}', [Bencana::class, 'detail'])->name('bencanaDetail');
 
@@ -48,7 +49,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('getKelurahan/{id}', [Bencana::class, 'getKelurahan'])->name('getKelurahan');
     Route::get('getKelurahan/{id}', [Bencana::class, 'getKelurahan'])->name('getKelurahan');
     Route::post('file-upload', [Upload::class, 'index'])->name('fileupload');
- 
+
+    Route::get('relokasiExport/{request?}', [Relokasi::class, 'index'])->name('relokasiExport');
+    Route::resource('relokasi', Relokasi::class); 
     Route::resource('kelurahan', KelurahanController::class);
     Route::resource('kecamatan', KecamatanController::class);
     Route::resource('jenis', JenisController::class);

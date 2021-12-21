@@ -25,6 +25,12 @@
             <span>Data Bencana</span></a>
     </li>
 
+    <li class="nav-item " id="nav-relokasi">
+        <a class="nav-link" href="{{ route('relokasi.index') }}">
+            <i class="fas fa-fw fa-list"></i>
+            <span>Data Relokasi</span></a>
+    </li>
+
     <li class="nav-item  " id="nav-master">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>

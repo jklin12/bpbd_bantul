@@ -42,18 +42,30 @@
                     @endif
 
 
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+
+
                     <div class="card shadow mb-4">
 
                         <div class="card-body">
                             <div class="d-sm-flex align-items-center justify-content-between mb-3">
-                                <a href="{{ route('addBencana') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data
+                                <a href="{{ route('relokasi.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data
                                 </a>
 
                                 <div class="bd-example">
                                     <button type="button" class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="fas fa-filter fa-sm text-white-50 mr-1"></i>Filter</button>
-                                    <a href="{{route('bencana')}}" class="btn btn-secondary btn-sm"><i class="fas fa-redo fa-sm text-white-50 mr-1"></i>Reset</a>
-                                    <a href="{{route('bencanaExport',array_merge($data['request'],['export'=>'pdf']))}}" class="btn btn-success btn-sm"><i class="fas fa-file fa-sm text-white-50 mr-1"></i>Export PDF</a>
-                                    <a href="{{route('bencanaExport',array_merge($data['request'],['export'=>'excel']))}}" class="btn btn-info btn-sm"><i class="fas fa-print fa-sm text-white-50 mr-1"></i>Export Exel</a>
+                                    <a href="{{route('relokasi.index')}}" class="btn btn-secondary btn-sm"><i class="fas fa-redo fa-sm text-white-50 mr-1"></i>Reset</a>
+                                    <a href="{{route('relokasiExport',array_merge($data['request'],['export'=>'pdf']))}}" class="btn btn-success btn-sm"><i class="fas fa-file fa-sm text-white-50 mr-1"></i>Export PDF</a>
+                                    <a href="{{route('relokasiExport',array_merge($data['request'],['export'=>'excel']))}}" class="btn btn-info btn-sm"><i class="fas fa-print fa-sm text-white-50 mr-1"></i>Export Exel</a>
                                 </div>
                             </div>
 
@@ -178,7 +190,7 @@
                                             <th>{{ $val['label'] }}</th>
                                             @endif
                                             @endforeach
-                                            <th></th>
+                                            <th colspan="2"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -196,10 +208,18 @@
                                             @endif
                                             @endif
                                             @endforeach
-                                            <td><a href="{{route('bencanaDetail',$b['id'])}}" class="btn btn-success btn-circle">
-                                                    <i class="fa fa-search-plus"></i>
+                                            <td>
+                                                <a href="javascript:;" data-toggle="modal" data-target="#editModal" data-action="{{ route('relokasi.update', $b['relokasi_id'])}}" class="btn btn-success btn-circle" @php foreach($data['arr_field'] as $key=> $val){
+                                                    echo 'data-'.str_replace('_','',$key).'="'. $b[$key].'" ';
+                                                    }
+                                                    @endphp >
+                                                    <i class="fa fa-edit"></i>
                                                 </a>
+
                                             </td>
+                                            <td> <a href="javascript:;" data-toggle="modal" data-target="#deleteModal" class="btn btn-danger btn-circle" data-name="{{ $b['relokasi_name'] }}" data-action="{{ route('relokasi.destroy', $b['relokasi_id'])}}">
+                                                    <i class="fa fa-trash"></i>
+                                                </a></td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -240,6 +260,71 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
+
+    <!-- start edit modal-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="editModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" id="edit-form" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        @foreach($data['arr_field'] as $kform => $form)
+                        @if($form['form'])
+
+                        @if($form['form_type'] == 'text')
+                        <div class="form-group">
+                            <label for="size">{{ $form['form_label'] }}</label>
+                            <input type="text" class="form-control" id="edit_{{ $kform }}" name="{{ $kform }}" placeholder="{{ $form['form_label'] }} ">
+                        </div>
+                        @endif
+
+                        @endif
+                        @endforeach
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="edit-form" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">batal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End edit modal-->
+
+    <!-- start delete modal-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="deleteModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hapus Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" id="delete-form" method="POST">
+                        @csrf
+                        @method('DELETE')
+                    </form>
+                    <p>Hapus data <strong id="delete-name"></strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="delete-form" class="btn btn-danger">Hapus</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">batal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End delete modal-->
+
     <!-- Logout Modal-->
     @include('modals.logout')
 
@@ -278,13 +363,40 @@
 
         $(document).ready(function() {
             FormPlugins.init()
-            $('#nav-bencana').addClass('active');
+            $('#nav-relokasi').addClass('active');
             $('#viewcolomall').on('change', function() {
                 if (this.checked) {
                     $('.kolomviewcheckbox').attr("checked", "checked");
                 } else {
                     $('.kolomviewcheckbox').removeAttr('checked');
                 }
+            })
+
+
+            $('#editModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget)
+
+                var action = button.data('action')
+                var modal = $(this)
+
+                <?php foreach ($data['arr_field'] as $key => $val) { ?>
+                    var editval_<?php echo $key ?> = button.data('<?php echo str_replace('_', '', $key) ?>');
+                    modal.find('.modal-body #edit_<?php echo $key ?>').val(editval_<?php echo $key ?>);
+                <?php } ?>
+
+                modal.find('#edit-form').attr('action', action)
+
+            })
+            $('#deleteModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget)
+                var name = button.data('name')
+                console.log(name)
+                var action = button.data('action')
+                var modal = $(this)
+
+                modal.find('.modal-body #delete-name').html(name)
+                modal.find('#delete-form').attr('action', action)
+
             })
         });
     </script>

@@ -17,8 +17,9 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class Bencana extends Controller
 {
-    public function index($export = null, Request $request)
+    public function index( Request $request)
     {
+        $export = $request['export'] ? $request['export'] : null;
         $tittle = 'Data bencana';
         $subTittle = '';
         $limit = 5;
@@ -77,7 +78,6 @@ class Bencana extends Controller
 
 
         $bencana = MBencana::query();
-        $bencana = MBencana::query();
         if (isset($request['kec']) && $request['kec'] != '') {
             $bencana = $bencana->where('t_bencana.kecamatan', $request['kec']);
         }
@@ -85,7 +85,7 @@ class Bencana extends Controller
             $bencana = $bencana->where($value[0], $value[1]);
         }
 
-        $bencana = $bencana->select('id', 'kecamatan', 'deskripsi', 'type', 'panjang', 'lebar', 'tinggi', 'created_at', 'type', 'kelurahan');
+        $bencana = $bencana->select('id', 'kecamatan', 'deskripsi', 'type', 'panjang', 'lebar', 'tinggi', 'created_at', 'type', 'kategori', 'status', 'kelurahan');
 
         if ($by == 'ASC') {
             $bencana->orderBy($order);
@@ -126,6 +126,8 @@ class Bencana extends Controller
 
         $jenis = Mjenis::all();
         $jenisVal = arr_filter($jenis, 'jenis_id', 'name');
+
+        $kategoriVal = ['Mitigasi' => 'Mitigasi', 'Rehabilitasi' => 'Rehabilitasi'];
 
         $kelurahan = MKelurahan::all();
         $kelVal = arr_filter($kelurahan, 'kelurahan_id', 'name');
@@ -182,6 +184,24 @@ class Bencana extends Controller
                 'filter_form_class' => '',
                 'filter_value' => '',
                 'keyvaldata' => $kelVal,
+                'kolom' => 1,
+                'sort' => 1,
+            ],
+            'kategori' => [
+                'table' => 1,
+                'hidecolom' => 0,
+                'label' => 'Kategori ',
+                'form' => 1,
+                'form_label' => 'Kategori ',
+                'form_type' => 'select',
+                'filter' => 1,
+                'filter_table' => '',
+                'filter_label' => 'Kategori ',
+                'filter_type' => 'select',
+                'filter_label_class' => '',
+                'filter_form_class' => '',
+                'filter_value' => '',
+                'keyvaldata' => $kategoriVal,
                 'kolom' => 1,
                 'sort' => 1,
             ],
@@ -293,6 +313,7 @@ class Bencana extends Controller
                 'kecamatan'     => 'required',
                 'kelurahan'  => 'required',
                 'deskripsi'  => 'required',
+                'kategori'  => 'required',
                 'type'  => 'required',
                 'panjang'  => 'required|integer',
                 'lebar'  => 'required|integer',
@@ -306,6 +327,8 @@ class Bencana extends Controller
                 'kecamatan.required'    => 'Kecamatan wajib diisi',
                 'kelurahan.required'    => 'Kelurahan wajib diisi',
                 'deskripsi.required'    => 'Deskripsi wajib diisi',
+                'kategori.required'    => 'Kategori wajib diisi',
+                'type.required'    => 'Jenis wajib diisi',
                 'alamat.required'    => 'Alamat wajib diisi',
                 'panjang.required'    => 'Panjang wajib diisi',
                 'panjang.integer'    => 'Panjang harus angka',
@@ -315,9 +338,6 @@ class Bencana extends Controller
                 'tinggi.integer'    => 'Tinggi harus angka',
                 'latitude.required'    => 'Latitude Harus di isi',
                 'longitude.required'    => 'Longitude Harus di isi',
-
-
-
             ];
 
             $validator = Validator::make($request->all(), $rules, $messages);
@@ -326,11 +346,18 @@ class Bencana extends Controller
                 return redirect()->back()->withErrors($validator)->withInput($request->all);
             }
             $arrImage = [];
+            $type = 'Bencana';
+            $tab = '?tab=detail';
+            
             if (is_array($request['images'])) {
                 $arrImage = $request['images'];
-                $type = $request['type'];
+
                 unset($request['images']);
-                unset($request['type']);
+                if ($request['type'] == 'perbaikan') {
+                    $tab = '?tab=perbaikan';
+                    $type = $request['type'];
+                    unset($request['type']);
+                }
             }
 
             $insert = MBencana::create($request->all());
@@ -341,14 +368,14 @@ class Bencana extends Controller
             if ($arrImage) {
 
                 foreach ($arrImage as $key => $value) {
-                    $img[] =   ['bencana_id' => $insertID, 'foto_name' => $value,'type' => $type];
+                    $img[] =   ['bencana_id' => $insertID, 'foto_name' => $value, 'type' => $type];
                 }
                 DB::table('t_data_foto')->insert($img);
             }
-
+           
             if ($insert) {
-                return redirect()->route('bencana')
-                    ->with('success', 'Tambah Data Berhasil');
+                return redirect()->route('bencanaDetail', $insertID)
+                ->with('success', 'Edit Data Berhasil');
             }
         }
 
@@ -424,8 +451,12 @@ class Bencana extends Controller
         }
     }
 
-    public function detail($id)
-    {
+    public function detail($id, Request $request)
+    { 
+        $input = $request->input();
+
+      
+
         $bencana = MBencana::select('t_kecamatan.name as nama_kec', 't_kelurahan.name as name_kel', 't_bencana.*', 't_jenis.name as jenis_bencana')
             ->leftJoin('t_kecamatan', 't_bencana.kecamatan', '=', 't_kecamatan.kecamatan_id')
             ->leftJoin('t_kelurahan', 't_bencana.kelurahan', '=', 't_kelurahan.kelurahan_id')
@@ -440,17 +471,24 @@ class Bencana extends Controller
         $bencana['foto'] = $foto;
 
         $bencana['arr_status'] = ['Baru', 'Proses', 'Selesai'];
-        $perbaikan = Mperbaikan::where('t_perbaikan.bencana_id', $id) 
+        $perbaikan = Mperbaikan::where('t_perbaikan.bencana_id', $id)
             ->leftJoin('t_data_foto', 't_perbaikan.id', '=', 't_data_foto.bencana_id')
-            ->get(); 
+            ->get();
         $susunPerbaikan = [];
         foreach ($perbaikan as $key => $value) {
-           $susunPerbaikan[$value['id']]['id'] = $value['id'];
-           $susunPerbaikan[$value['id']]['status'] = $value['status'];
-           $susunPerbaikan[$value['id']]['deskripsi'] = $value['deskripsi'];
-           $susunPerbaikan[$value['id']]['foto'][] = $value['foto_name'];
+            $susunPerbaikan[$value['id']]['id'] = $value['id'];
+            $susunPerbaikan[$value['id']]['status'] = $value['status'];
+            $susunPerbaikan[$value['id']]['created_at'] = $value['created_at'];
+            $susunPerbaikan[$value['id']]['deskripsi'] = $value['deskripsi'];
+            $susunPerbaikan[$value['id']]['foto'][] = $value['foto_name'];
         }
         $bencana['perbaikan'] = $susunPerbaikan;
+      
+        $bencana['tab'] = 'detail';
+        if (isset($input['tab']) && $input['tab']) {
+            $bencana['tab'] = $input['tab'];
+        }
+        
         return view('bencana.detail', compact('bencana'));
     }
 
