@@ -6,6 +6,8 @@ use App\Models\MRelokasi;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\Export;
+use App\Models\MKecamatan;
+use App\Models\MKelurahan;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Validator;
@@ -84,7 +86,7 @@ class Relokasi extends Controller
             $relokasi = $relokasi->where($value[0], $value[1]);
         }
 
-        $relokasi = $relokasi->select('relokasi_id', 'relokasi_tanggal', 'relokasi_name', 'relokasi_asal', 'relokasi_luas', 'relokasi_jumlah_jiwa', 'relokasi_status_tanah', 'relokasi_sarana_prasarana', 'relokasi_lokasi', 'relokasi_keterangan');
+        $relokasi = $relokasi->select('relokasi_id', 'relokasi_tanggal', 'relokasi_name', 'relokasi_asal', 'relokasi_luas', 'relokasi_jumlah_jiwa', 'relokasi_status_tanah', 'relokasi_sarana_prasarana', 'lokasi_relokasi', 'relokasi_keterangan','kelurahan_asal','kecamatan_asal','kecamatan_relokasi','kelurahan_relokasi');
 
         if ($by == 'ASC') {
             $relokasi->orderBy($order);
@@ -277,6 +279,12 @@ class Relokasi extends Controller
     private function arrField()
     {
 
+        $kecamatan = MKecamatan::all();
+        $kecVal = arr_filter($kecamatan, 'kecamatan_id', 'name');
+
+
+        $kelurahan = MKelurahan::all();
+        $kelVal = arr_filter($kelurahan, 'kelurahan_id', 'name');
 
         $arrFiled = [
             'relokasi_tanggal' => [
@@ -312,6 +320,42 @@ class Relokasi extends Controller
                 'filter_form_class' => '',
                 'filter_value' => '',
                 'keyvaldata' => '',
+                'kolom' => 1,
+                'sort' => 1,
+            ],
+            'kecamatan_asal' => [
+                'table' => 1,
+                'hidecolom' => 0,
+                'label' => 'Kecamatan Asal ',
+                'form' => 1,
+                'form_label' => 'Kecamatan Asal ',
+                'form_type' => 'select',
+                'filter' => 1,
+                'filter_table' => '',
+                'filter_label' => 'Kecamatan Asal',
+                'filter_type' => 'select',
+                'filter_label_class' => '',
+                'filter_form_class' => '',
+                'filter_value' => '',
+                'keyvaldata' => $kecVal,
+                'kolom' => 1,
+                'sort' => 1,
+            ],
+            'kelurahan_asal' => [
+                'table' => 1,
+                'hidecolom' => 0,
+                'label' => 'Kelurahan Asal',
+                'form' => 1,
+                'form_label' => 'Kelurahan Asal',
+                'form_type' => 'select',
+                'filter' => 1,
+                'filter_table' => '',
+                'filter_label' => 'Kelurahan Asal',
+                'filter_type' => 'select',
+                'filter_label_class' => '',
+                'filter_form_class' => '',
+                'filter_value' => '',
+                'keyvaldata' => $kelVal,
                 'kolom' => 1,
                 'sort' => 1,
             ],
@@ -404,16 +448,52 @@ class Relokasi extends Controller
                 'kolom' => 1,
                 'sort' => 1,
             ],
-            'relokasi_lokasi' => [
+            'kecamatan_relokasi' => [
                 'table' => 1,
                 'hidecolom' => 0,
-                'label' => 'Lokasi',
+                'label' => 'Kecamatan Relokasi ',
                 'form' => 1,
-                'form_label' => 'Lokasi',
+                'form_label' => 'Kecamatan Relokasi ',
+                'form_type' => 'select',
+                'filter' => 1,
+                'filter_table' => '',
+                'filter_label' => 'Kecamatan Relokasi',
+                'filter_type' => 'select',
+                'filter_label_class' => '',
+                'filter_form_class' => '',
+                'filter_value' => '',
+                'keyvaldata' => $kecVal,
+                'kolom' => 1,
+                'sort' => 1,
+            ],
+            'kelurahan_relokasi' => [
+                'table' => 1,
+                'hidecolom' => 0,
+                'label' => 'Kelurahan Relokasi',
+                'form' => 1,
+                'form_label' => 'Kelurahan Relokasi',
+                'form_type' => 'select',
+                'filter' => 1,
+                'filter_table' => '',
+                'filter_label' => 'Kelurahan Relokasi',
+                'filter_type' => 'select',
+                'filter_label_class' => '',
+                'filter_form_class' => '',
+                'filter_value' => '',
+                'keyvaldata' => $kelVal,
+                'kolom' => 1,
+                'sort' => 1,
+            ],
+            'lokasi_relokasi' => [
+                'table' => 1,
+                'hidecolom' => 0,
+                'label' => 'Lokasi Relokasi',
+                'form' => 1,
+                'form_label' => 'Lokasi Relokasi',
                 'form_type' => 'text',
                 'filter' => 0,
                 'filter_table' => '',
-                'filter_label' => 'Lokasi',
+                'filter_label' => 'Lokasi Relokasi',
                 'filter_type' => '',
                 'filter_label_class' => '',
                 'filter_form_class' => '',

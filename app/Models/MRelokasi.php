@@ -15,7 +15,7 @@ class MRelokasi extends Model
     protected $primaryKey = 'relokasi_id';
 
     protected $fillable = [
-        'relokasi_tanggal', 'relokasi_name', 'relokasi_asal', 'relokasi_luas', 'relokasi_jumlah_jiwa','relokasi_status_tanah','relokasi_sarana_prasarana', 'relokasi_lokasi', 'relokasi_keterangan' 
+        'relokasi_tanggal', 'relokasi_name', 'relokasi_asal', 'relokasi_luas', 'relokasi_jumlah_jiwa','relokasi_status_tanah','relokasi_sarana_prasarana', 'lokasi_relokasi', 'relokasi_keterangan' 
     ];
 
 }

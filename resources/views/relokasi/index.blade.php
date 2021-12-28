@@ -202,7 +202,7 @@
                                             @if($val['form_type'] == 'date')
                                             <td>{{ \Carbon\Carbon::parse($b[$key])->isoFormat('dddd, D MMMM Y') }}</td>
                                             @elseif($val['form_type'] == 'select')
-                                            <td>{{ $val['keyvaldata'][$b[$key]] }}</td>
+                                            <td>{{ isset($val['keyvaldata'][$b[$key]]) ? $val['keyvaldata'][$b[$key]] : ''  }}</td>
                                             @else
                                             <td>{{ $b[$key]}}</td>
                                             @endif

@@ -56,7 +56,18 @@
                                 @if($form['form_type'] == 'text')
                                 <div class="form-group">
                                     <label for="size">{{ $form['form_label'] }}</label>
-                                    <input type="text" class="form-control" id="alamat" name="{{ $kform }}" placeholder="{{ $form['form_label'] }} ">
+                                    <input type="text" class="form-control" id="f_{{$kform}}" name="{{ $kform }}" placeholder="{{ $form['form_label'] }} ">
+                                </div>
+                                @elseif($form['form_type'] == 'select')
+                                <div class="form-group">
+                                    <label for="size">{{ $form['form_label'] }}</label>
+                                   
+                                    <select class="custom-select mr-sm-2" id="f_{{$kform}}" name="{{$kform}}" value="{{ isset($form['filter_value']) &&  $form['filter_value']  ? $form['filter_value'] :"" }}">
+                                        <option></option>
+                                        @foreach ($form['keyvaldata'] as $kval => $vval)
+                                        <option value="{{ $kval }}" {{ isset($vf['filter_value']) &&  $vf['filter_value'] == $kval ? "selected" :""  }}>{{ $vval }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 @endif
 
